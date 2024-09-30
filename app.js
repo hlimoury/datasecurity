@@ -42,6 +42,19 @@ const upload = multer({ storage: storage });
 
 
 
+app.get('/get-favicon', async (req, res) => {
+  const { url } = req.query;
+
+  try {
+    const favicon = await faviconFetcher.fetch(url);
+    res.json({ favicon });
+  } catch (error) {
+    res.status(500).json({ message: 'Unable to fetch favicon', error });
+  }
+});
+
+
+
 
 
 
@@ -186,16 +199,50 @@ app.post('/deleteservice/:id', ensureAuthenticated,async (req, res) => {
 
 
 
-app.get('/adminproduct',ensureAuthenticated, async (req, res) => {
+app.get('/adminproduct', ensureAuthenticated, async (req, res) => {
   try {
-      const database = db.getDb();
-      const products = await database.collection('products').find().toArray();  // Fetch products
-      const brands = await database.collection('brands').find().toArray(); // Fetch brands for the dropdown
-      const services = await database.collection('services').find().toArray(); // Fetch services for the dropdown
-      res.render('add-products', { products, brands, services });
+    const database = db.getDb();
+    const productsCollection = database.collection('products');
+
+    // Fetch brands and services for the dropdowns
+    const brands = await database.collection('brands').find().toArray();
+    const services = await database.collection('services').find().toArray();
+
+    // Build the query object
+    let query = {};
+
+    // Handle Brand Filter
+    if (req.query.brand) {
+      query.brand = new ObjectId(req.query.brand);
+    }
+
+    // Handle Service Filter
+    if (req.query.service) {
+      query.service = new ObjectId(req.query.service);
+    }
+
+    // Handle Search Filter
+    if (req.query.search && req.query.search.trim() !== '') {
+      const searchTerm = req.query.search.trim();
+      query.$or = [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+        { reference: { $regex: searchTerm, $options: 'i' } }
+      ];
+    }
+
+    // Fetch products based on the query
+    const products = await productsCollection.find(query).toArray();
+
+    res.render('add-products', {
+      products,
+      brands,
+      services,
+      query: req.query
+    });
   } catch (err) {
-      console.error('Error fetching products:', err);
-      res.status(500).send('Error fetching products');
+    console.error('Error fetching products:', err);
+    res.status(500).send('Error fetching products');
   }
 });
 
@@ -242,7 +289,6 @@ app.post('/deleteproduct/:id',ensureAuthenticated, async (req, res) => {
 
 
 
-
 app.get('/service/:id/products', async (req, res) => {
   try {
     const serviceId = req.params.id;
@@ -269,7 +315,16 @@ app.get('/service/:id/products', async (req, res) => {
       productsQuery.brand = new ObjectId(req.query.brand);
     }
 
-    // Fetch all products related to the selected service and brand
+    // **Handle Search Query**
+    if (req.query.search) {
+      const searchTerm = req.query.search.trim();
+      productsQuery.$or = [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+      ];
+    }
+
+    // Fetch products based on the query
     const products = await database.collection('products').find(productsQuery).toArray();
 
     // Render the products page with the related data

@@ -1,23 +1,57 @@
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
-
+const { MongoClient } = require("mongodb");
+require('dotenv').config();  // Load environment variables
 
 let database;
 
 async function connect() {
-
-  const client = await MongoClient.connect("mongodb://localhost:27017");
-  database = client.db("datasecurity");
+  const uri = process.env.MONGODB_URI;  // Get MongoDB URI from environment variable
+  if (!uri) {
+    throw new Error('MongoDB connection URI is not defined');
+  }
+  
+  try {
+    const client = await MongoClient.connect(uri);
+    database = client.db(process.env.DB_NAME || "datasecurity");
+    console.log('Connected to MongoDB Atlas');
+  } catch (error) {
+    console.error('Failed to connect to the database.', error);
+    throw error;
+  }
 }
 
-function getDb(){
-    if(!database){
-        throw { message: "Database connection not established!" };
-    }
-    return database;
+function getDb() {
+  if (!database) {
+    throw new Error("Database connection not established!");
+  }
+  return database;
 }
 
 module.exports = {
-    connectToDatabase: connect,
-    getDb: getDb
+  connectToDatabase: connect,
+  getDb: getDb
 };
+
+
+// const mongodb = require("mongodb");
+// const MongoClient = mongodb.MongoClient;
+
+
+// let database;
+
+// async function connect() {
+
+//   const client = await MongoClient.connect("mongodb+srv://hlimoury03:fMqd2zggqF9HO2uH@cluster0.scvas.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+//   database = client.db("datasecurity");
+// }
+
+// function getDb(){
+//     if(!database){
+//         throw { message: "Database connection not established!" };
+//     }
+//     return database;
+// }
+
+// module.exports = {
+//     connectToDatabase: connect,
+//     getDb: getDb
+// };
