@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head") %>
+  </head>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-top: 20px;
+}
+
+form {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+form input, form select, form textarea {
+    padding: 10px;
+    margin: 10px 0;
+    display: block;
+    width: 300px;
+}
+
+form button {
+    padding: 10px 20
+}
+  </style>
+  <body>
+   
+    
+    
+    <h1>Manage Products</h1>
+
+    <!-- Form to Add New Product -->
+    <form action="/adminproduct" method="POST" enctype="multipart/form-data">
+        <label for="name">Product Name:</label>
+        <input type="text" name="name" required>
+
+        <label for="reference">Reference:</label>
+        <input type="text" name="reference" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" required></textarea>
+
+        <!-- Dropdown for brands -->
+        <label for="brand">Brand:</label>
+        <select name="brand" required>
+            <% brands.forEach(brand => { %>
+                <option value="<%= brand._id %>"><%= brand.name %></option>
+            <% }) %>
+        </select>
+
+        <!-- Dropdown for services -->
+        <label for="service">Service:</label>
+        <select name="service" required>
+            <% services.forEach(service => { %>
+                <option value="<%= service._id %>"><%= service.title %></option>
+            <% }) %>
+        </select>
+
+        <label for="image">Product Image:</label>
+        <input type="file" name="image" required>
+
+        <label for="pdf">Product PDF:</label>
+        <input type="file" name="pdf" required>
+
+        <button type="submit">Add Product</button>
+    </form>
+
+    <!-- Display the list of products -->
+    <h2>Products List</h2>
+    <!-- Inside your products list -->
+
+    <div class="row g-3">
+        <% products.forEach(product => { %>
+          <% 
+            const productBrand = brands.find(b => b._id.toString() === product.brand.toString());
+            const productService = services.find(s => s._id.toString() === product.service.toString());
+          %>
+          <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="product-item bg-light border-bottom border-5 border-primary rounded h-100">
+              <div class="position-relative p-3">
+                <!-- Product Image -->
+                <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid mb-2" style="height: 150px; object-fit: contain;">
+                
+                <!-- Product Name -->
+                <h5 class="text-primary"><%= product.name %></h5>
+                
+                <!-- Truncated Product Description -->
+                <p class="small"><%= truncateText(product.description, 50) %></p>
+                
+                <!-- View Product Details Button -->
+                <a href="/product/<%= product._id %>" class="btn btn-sm btn-secondary">View Details</a>
+                <br>
+                <a href="<%= product.pdf %>" target="_blank" class="btn btn-info mt-2">View PDF</a>
+      
+                <!-- Delete Button -->
+                <form action="/deleteproduct/<%= product._id %>" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+
+
+
+
+
+
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  </body>
+</html>

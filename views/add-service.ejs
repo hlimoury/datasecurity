@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head") %>
+  </head>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-top: 20px;
+}
+
+form {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+form input, form select, form textarea {
+    padding: 10px;
+    margin: 10px 0;
+    display: block;
+    width: 300px;
+}
+
+form button {
+    padding: 10px 20
+}
+  </style>
+  <body>
+   
+    
+    
+    <h1>Manage Services</h1>
+
+    <!-- Form to Add New Service -->
+    <form action="/adminservice" method="POST" enctype="multipart/form-data">
+        <label for="title">Service Title:</label>
+        <input type="text" name="title" required>
+
+        <label for="summary">Summary:</label>
+        <input type="text" name="summary" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" required></textarea>
+
+        <label for="image">Service Image:</label>
+        <input type="file" name="image" required>
+
+        <button type="submit">Add Service</button>
+    </form>
+
+    <!-- Display the list of services -->
+    <h2>Services List</h2>
+    
+
+    <div class="container">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+            <h5 class="text-primary text-uppercase" style="letter-spacing: 5px;">Services</h5>
+            <h1 class="display-5 mb-0">Nos Excellents Services De Sécurité</h1>
+        </div>
+        <div class="row g-5">
+
+
+            <!-- //// insert DATA ///// -->
+
+            <% services.forEach(service => { %>
+                <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
+                  <div class="service-item bg-light border-bottom border-5 border-primary rounded">
+                    <div class="position-relative p-5">
+                      <li>
+                        <h3><%= service.title %></h3>
+                        <p><%= truncateText(service.summary, 50) %></p>
+                        <p><%= truncateText(service.description, 50) %></p>
+                        <% if (service.image) { %>
+                          <img src="<%= service.image %>" alt="<%= service.title %>" style="width: 200px;">
+                        <% } %>
+                        <form action="/deleteservice/<%= service._id %>" method="POST" style="display:inline;">
+                          <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  </body>
+</html>

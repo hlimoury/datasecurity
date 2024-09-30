@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("partials/head") %>
+  </head>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-top: 20px;
+}
+
+form {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+form input, form select, form textarea {
+    padding: 10px;
+    margin: 10px 0;
+    display: block;
+    width: 300px;
+}
+
+form button {
+    padding: 10px 20
+}
+  </style>
+  <body>
+    <%- include("partials/header") %>
+    
+    
+    <div class="container">
+        <h1>Admin Login</h1>
+        <% if (error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <form action="/login" method="POST">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" name="username" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </div>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  </body>
+</html>
+
+
+
+
