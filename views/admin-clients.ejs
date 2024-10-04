@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+  <title>Admin - Clients</title>
+</head>
+<body>
+  
+
+  <div class="container mt-5">
+    <h1>Manage Clients</h1>
+
+    <!-- Form to Add a New Client -->
+    <form action="/adminclients" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="name" class="form-label">Client Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="website" class="form-label">Website URL</label>
+        <input type="url" class="form-control" id="website" name="website" required>
+      </div>
+      <div class="mb-3">
+        <label for="logo" class="form-label">Client Logo</label>
+        <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Client</button>
+    </form>
+
+    <!-- List of Clients -->
+    <h2 class="mt-5">Existing Clients</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Website</th>
+          <th>Logo</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% clients.forEach(client => { %>
+          <tr>
+            <td><%= client.name %></td>
+            <td><a href="<%= client.website %>" target="_blank"><%= client.website %></a></td>
+            <td>
+              <% if (client.logo) { %>
+                <img src="<%= client.logo %>" alt="<%= client.name %> Logo" style="width: 100px;">
+              <% } %>
+            </td>
+            <td>
+              <form action="/deleteclient/<%= client._id %>" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+              <a href="/editclient/<%= client._id %>" class="btn btn-secondary">Edit</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

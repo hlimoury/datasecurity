@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head") %>
+  <link href="/css/admin.css" rel="stylesheet">
+</head>
+<style>
+
+</style>
+<body>
+  <h1>Edit Service</h1>
+<div class="form-update-brands">
+  <form action="/editservice/<%= service._id %>" method="POST" enctype="multipart/form-data">
+    <label for="title">Service Title:</label>
+    <input type="text" name="title" value="<%= service.title %>" required>
+
+    <label for="summary">Summary:</label>
+    <input type="text" name="summary" value="<%= service.summary %>" required>
+
+    <label for="description">Description:</label>
+    <textarea name="description" required><%= service.description %></textarea>
+
+    <label for="image">Service Image:</label>
+    <% if (service.image) { %>
+      <img src="<%= service.image %>" alt="<%= service.title %>" style="width: 200px;">
+    <% } %>
+    <input type="file" name="image">
+
+    <button type="submit">Update Service</button>
+  </form>
+</div>
+  <!-- Include necessary scripts -->
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head") %>
+  <link href="/css/admin.css" rel="stylesheet">
+</head>
+<style>
+  body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+h1 {
+  color: #333;
+  margin-top: 20px;
+}
+
+form {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+form input, form select, form textarea {
+  padding: 10px;
+  margin: 10px 0;
+  display: block;
+  width: 300px;
+}
+
+form button {
+  padding: 10px 20
+}
+
+</style>
+<body>
+  <h1>Edit Marque</h1>
+<div class="form-update-brands">
+  <form action="/editbrand/<%= brand._id %>" method="POST">
+    <label for="name">Marque Name:</label>
+    <input type="text" name="name" value="<%= brand.name %>" required>
+    <button type="submit">Update Marque</button>
+  </form>
+</div>
+  <!-- Include necessary scripts -->
+</body>
+</html>

@@ -47,18 +47,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
-                    <a href="#caroussel-start" class="nav-item nav-link active">ACCUEIL</a>
-                    <a href="#apropos" class="nav-item nav-link">DETAILS</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">SERVICES</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="price.html" class="dropdown-item">Pricing Plan</a>
-                            <a href="blog.html" class="dropdown-item">Blog Grid</a>
-                            <a href="detail.html" class="dropdown-item">Blog Detail</a>
-                            <a href="team.html" class="dropdown-item">The Team</a>
-                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        </div>
-                    </div>
+                    <a href="/#caroussel-start" class="nav-item nav-link active">ACCUEIL</a>
+                    <a href="/#apropos" class="nav-item nav-link">DETAILS</a>
+                    <a href="/#services" class="nav-item nav-link">SERVICES</a>
+                    
                     <a href="mailto:datasecurity@datasecurity.ma?subject=Demande%20de%20renseignements&body=Bonjour,%20j'aimerais%20en%20savoir%20plus%20sur%20vos%20services." class="nav-item nav-link">CONTACT</a>
                 </div>
             </div>
@@ -77,23 +69,23 @@
           <!-- Product Details -->
           <div class="col-md-6">
             <h1 class="mb-3"><%= product.name %></h1>
-            <h4>Reference: <%= product.reference %></h4>
-            <h5>Brand: <%= brand ? brand.name : 'N/A' %></h5>
+            <h4>Référence: <%= product.reference %></h4>
+            <h5>Marque: <%= brand ? brand.name : 'N/A' %></h5>
             <h5>Service: <%= service ? service.title : 'N/A' %></h5>
             <p class="mt-4"><%= product.description %></p>
     
             <!-- PDF Download Link (if applicable) -->
             <% if (product.pdf) { %>
-              <a href="<%= product.pdf %>" class="btn btn-primary mt-3" download>Download PDF</a>
+              <a href="<%= product.pdf %>" class="btn btn-primary mt-3" download>Télécharger PDF</a>
             <% } %>
             <a href="mailto:datasecurity@datasecurity.ma?subject=Demande%20de%20renseignements%20sur%20le%20produit%20-%20<%= encodeURIComponent(product.name) %>&body=Bonjour,%0D%0A%0D%0AJe%20suis%20intéressé(e)%20par%20le%20produit%20<%= encodeURIComponent(product.name) %>.%0D%0AMerci%20de%20m'envoyer%20plus%20d'informations.%0D%0A%0D%0AMerci."
-                class="btn btn-secondary mt-3">Send Mail</a>
+                class="btn btn-secondary mt-3">Demande Devis Gratuit </a>
           </div>
         </div>
     
         <!-- Optional: Back to Products Link -->
         <div class="mt-5">
-          <a href="/service/<%= service ? service._id : '' %>/products" class="btn btn-secondary">Back to Products</a>
+          <a href="/service/<%= service ? service._id : '' %>/products" class="btn btn-secondary">Retour aux produits</a>
         </div>
       </div>
     

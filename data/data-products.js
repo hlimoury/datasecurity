@@ -40,7 +40,7 @@ module.exports = {
 
 // async function connect() {
 
-//   const client = await MongoClient.connect("mongodb+srv://hlimoury03:fMqd2zggqF9HO2uH@cluster0.scvas.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+//   const client = await MongoClient.connect("");
 //   database = client.db("datasecurity");
 // }
 

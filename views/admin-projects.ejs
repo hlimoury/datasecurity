@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include("partials/head") %>
+</head>
+<body>
+  <h1>Gérer les Projets</h1>
+
+  <!-- Formulaire d'ajout de projet -->
+  <!-- Formulaire d'ajout de projet -->
+<form action="/adminprojects" method="POST" enctype="multipart/form-data">
+    <div>
+      <label for="title">Titre du Projet :</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+    <div>
+      <label for="phrase">Phrase :</label>
+      <textarea id="phrase" name="phrase" required></textarea>
+    </div>
+    <div>
+      <label for="image">Image :</label>
+      <input type="file" id="image" name="image">
+    </div>
+    <button type="submit">Ajouter le Projet</button>
+  </form>
+  
+
+  <!-- Liste des projets existants -->
+  <h2>Projets Existants</h2>
+  <ul>
+    <!-- Dans la liste des projets existants -->
+<% projects.forEach(project => { %>
+    <li>
+      <strong><%= project.title %></strong> - <%= project.phrase %>
+      <% if (project.image) { %>
+        <img src="<%= project.image %>" alt="<%= project.title %>" width="100">
+      <% } %>
+      <!-- Boutons d'édition et de suppression -->
+      <a href="/editproject/<%= project._id %>">Modifier</a>
+      <form action="/deleteproject/<%= project._id %>" method="POST" style="display:inline;">
+        <button type="submit">Supprimer</button>
+      </form>
+    </li>
+  <% }) %>
+  
+  </ul>
+</body>
+</html>

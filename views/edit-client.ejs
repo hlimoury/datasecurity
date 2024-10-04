@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <link href="/css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1>Edit Client</h1>
+
+    <form action="/editclient/<%= client._id %>" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="name" class="form-label">Client Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="<%= client.name %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="website" class="form-label">Website URL</label>
+        <input type="url" class="form-control" id="website" name="website" value="<%= client.website %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="logo" class="form-label">Client Logo</label>
+        <% if (client.logo) { %>
+          <img src="<%= client.logo %>" alt="<%= client.name %> Logo" style="width: 100px;">
+        <% } %>
+        <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+        <small class="form-text text-muted">Upload a new logo to replace the existing one.</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Update Client</button>
+    </form>
+  </div>
+  <!-- Include necessary scripts -->
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head") %>
+  <link href="/css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+  <h1>Edit Product</h1>
+
+  <form action="/editproduct/<%= product._id %>" method="POST" enctype="multipart/form-data">
+    <label for="name">Product Name:</label>
+    <input type="text" name="name" value="<%= product.name %>" required>
+
+    <label for="reference">Reference:</label>
+    <input type="text" name="reference" value="<%= product.reference %>" required>
+
+    <label for="description">Description:</label>
+    <textarea name="description" required><%= product.description %></textarea>
+
+    <!-- Dropdown for brands -->
+    <label for="brand">Brand:</label>
+    <select name="brand" required>
+      <% brands.forEach(brand => { %>
+        <option value="<%= brand._id %>" <%= product.brand.toString() === brand._id.toString() ? 'selected' : '' %>><%= brand.name %></option>
+      <% }) %>
+    </select>
+
+    <!-- Dropdown for services -->
+    <label for="service">Service:</label>
+    <select name="service" required>
+      <% services.forEach(service => { %>
+        <option value="<%= service._id %>" <%= product.service.toString() === service._id.toString() ? 'selected' : '' %>><%= service.title %></option>
+      <% }) %>
+    </select>
+
+    <label for="image">Product Image:</label>
+    <% if (product.image) { %>
+      <img src="<%= product.image %>" alt="<%= product.name %>" style="width: 200px;">
+    <% } %>
+    <input type="file" name="image">
+
+    <label for="pdf">Product PDF:</label>
+    <% if (product.pdf) { %>
+      <a href="<%= product.pdf %>" target="_blank">View Current PDF</a>
+    <% } %>
+    <input type="file" name="pdf">
+
+    <button type="submit">Update Product</button>
+  </form>
+
+  <!-- Include necessary scripts -->
+</body>
+</html>

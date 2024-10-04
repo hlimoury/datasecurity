@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+  <title>Admin - Update Clients</title>
+</head>
+<body>
+ 
+
+  <div class="container mt-5">
+    <h1>Update Clients</h1>
+
+    <!-- List of Clients -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Website</th>
+          <th>Logo</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% clients.forEach(client => { %>
+          <tr>
+            <td><%= client.name %></td>
+            <td><a href="<%= client.website %>" target="_blank"><%= client.website %></a></td>
+            <td>
+              <% if (client.logo) { %>
+                <img src="<%= client.logo %>" alt="<%= client.name %> Logo" style="width: 100px;">
+              <% } %>
+            </td>
+            <td>
+              <a href="/editclient/<%= client._id %>" class="btn btn-secondary">Edit</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+
+</body>
+</html>

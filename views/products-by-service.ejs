@@ -31,6 +31,17 @@
 </head>
 
 <body>
+    <%
+  function buildPaginationQuery(page) {
+    let queryParams = Object.assign({}, query);
+    queryParams.page = page;
+    let queryString = Object.keys(queryParams)
+      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(queryParams[key]))
+      .join('&');
+    return queryString;
+  }
+%>
+
     <!-- Navbar Start -->
     <header>
         <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm py-3 py-lg-0 px-3 px-lg-0">
@@ -49,16 +60,7 @@
                 <div class="navbar-nav ms-auto py-0">
                     <a href="#caroussel-start" class="nav-item nav-link active">ACCUEIL</a>
                     <a href="#apropos" class="nav-item nav-link">DETAILS</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">SERVICES</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="price.html" class="dropdown-item">Pricing Plan</a>
-                            <a href="blog.html" class="dropdown-item">Blog Grid</a>
-                            <a href="detail.html" class="dropdown-item">Blog Detail</a>
-                            <a href="team.html" class="dropdown-item">The Team</a>
-                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        </div>
-                    </div>
+                    <a href="#apropos" class="nav-item nav-link">SERVICES</a>        
                     <a href="mailto:datasecurity@datasecurity.ma?subject=Demande%20de%20renseignements&body=Bonjour,%20j'aimerais%20en%20savoir%20plus%20sur%20vos%20services." class="nav-item nav-link">CONTACT</a>
                 </div>
             </div>
@@ -76,15 +78,15 @@
   
 
     <div class="container py-5">
-        <h1>Products for <%= service.title %></h1>
+        <h1>Produits Pour <%= service.title %></h1>
         <p><%= service.description %></p>
 
         <!-- Dropdown Menu to Sort by Brand -->
         <form method="GET" action="">
             <div class="mb-4">
-                <label for="brand" class="form-label">Filter by Brand:</label>
+                <label for="brand" class="form-label">Filtre Par Marque:</label>
                 <select id="brand" name="brand" class="form-select" onchange="this.form.submit()">
-                    <option value="">All Brands</option>
+                    <option value="">Toutes Les Marques</option>
                     <% brands.forEach(brand => { %>
                         <option value="<%= brand._id %>" <% if (brand._id.toString() === (query.brand || '')) { %>selected<% } %>><%= brand.name %></option>
                     <% }) %>
@@ -101,18 +103,16 @@
                       <img src="<%= product.image %>" alt="<%= product.name %>" style="width: 100%; height: auto;">
                       <!-- Product Details -->
                       <h3 class="mb-3 text-primary"><%= product.name %></h3>
-                      <p>Reference: <%= product.reference %></p>
+                      <p>Référence: <%= product.reference %></p>
                       <!-- Truncated Description -->
                       <p><%= truncateText(product.description, 100) %></p>
                       <!-- Link to Product Detail Page -->
-                      <a href="/product/<%= product._id %>" class="btn btn-info">View Product</a>
+                      <a href="/product/<%= product._id %>" class="btn btn-info">Voir Produit</a>
                     </div>
                   </div>
                 </div>
               <% }) %>
-          </div>
-    </div>
-    
+              
 
     
 
@@ -125,7 +125,42 @@
     <!-- Services End -->
 
 
-  
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <!-- Previous Page Link -->
+          <% if (currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?<%= buildPaginationQuery(currentPage - 1) %>" aria-label="Précédent">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link" aria-hidden="true">&laquo;</span>
+            </li>
+          <% } %>
+      
+          <!-- Page Numbers -->
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <% if (i === currentPage) { %>active<% } %>">
+              <a class="page-link" href="?<%= buildPaginationQuery(i) %>"><%= i %></a>
+            </li>
+          <% } %>
+      
+          <!-- Next Page Link -->
+          <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?<%= buildPaginationQuery(currentPage + 1) %>" aria-label="Suivant">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% } else { %>
+            <li class="page-item disabled">
+              <span class="page-link" aria-hidden="true">&raquo;</span>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
 
     
 

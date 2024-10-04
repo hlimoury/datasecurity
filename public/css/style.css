@@ -495,3 +495,132 @@ section.client .section-title {
     height: 120px; /* Set a fixed height */
     object-fit: contain; /* Maintain aspect ratio */
 }
+
+.instagram-btn {
+    background-color: #E4405F; /* Instagram's pink/red gradient */
+    border-color: #E4405F;
+  }
+
+  .instagram-btn i {
+    color: white; /* White icon on the Instagram background */
+  }
+
+
+  .swiper-container {
+    width: 100%;
+    padding: 20px 0;
+    position: relative;
+  }
+  
+  .swiper-pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  
+  /* Style pour l'icône "Nouveau" */
+.product-item {
+    position: relative;
+  }
+  
+  .new-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+ /* Product Card Styles */
+.product-item {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .product-item img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-item .product-info {
+    padding: 15px;
+  }
+  
+  /* Hover Effects */
+  .product-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .product-item:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* "New" Icon Styles */
+  .new-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+  
+  /* Styles pour la section des projets */
+.projects-section {
+    background-color: #f8f9fa; /* Couleur de fond légère */
+    padding: 60px 0;
+  }
+  
+  .projects-section h2 {
+    font-size: 36px;
+    color: #343a40;
+    margin-bottom: 40px;
+  }
+  
+  /* Styles pour le carrousel */
+  .project-carousel .swiper-slide {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .project-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 1000px;
+  }
+  
+  .project-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .project-item h3 {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #007bff; /* Couleur primaire */
+  }
+  
+  .project-item p {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #6c757d;
+  }
+  

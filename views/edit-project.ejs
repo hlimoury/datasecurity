@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link href="/css/admin.css" rel="stylesheet">
+</head>
+<body>
+  <h1>Modifier le Projet</h1>
+
+  <form action="/editproject/<%= project._id %>" method="POST" enctype="multipart/form-data">
+    <div>
+      <label for="title">Titre du Projet :</label>
+      <input type="text" id="title" name="title" value="<%= project.title %>" required>
+    </div>
+    <div>
+      <label for="phrase">Phrase :</label>
+      <textarea id="phrase" name="phrase" required><%= project.phrase %></textarea>
+    </div>
+    <!-- Si vous avez besoin de télécharger une image -->
+    <div>
+      <label for="image">Image :</label>
+      <input type="file" id="image" name="image">
+      <img src="<%= project.image %>" alt="<%= project.title %>" width="100">
+    </div>
+    <button type="submit">Mettre à Jour le Projet</button>
+  </form>
+</body>
+</html>

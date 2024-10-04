@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head") %>
+</head>
+<body>
+  <h1>Update Products</h1>
+
+  <!-- Search and Filter Form -->
+  <form action="/adminproductupdate" method="GET" class="mb-4" style="width: 700px;">
+    <div class="row align-items-center">
+      <!-- Search Bar -->
+      <div class="col-md-4 mb-2">
+        <input type="text" name="search" class="form-control form-control-lg" placeholder="Search products..." value="<%= query.search || '' %>">
+      </div>
+      <!-- Brand Dropdown -->
+      <div class="col-md-3 mb-2">
+        <select name="brand" class="form-select form-select-lg">
+          <option value="">All Brands</option>
+          <% brands.forEach(brand => { %>
+            <option value="<%= brand._id %>" <%= query.brand === brand._id.toString() ? 'selected' : '' %>><%= brand.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <!-- Service Dropdown -->
+      <div class="col-md-3 mb-2">
+        <select name="service" class="form-select form-select-lg">
+          <option value="">All Services</option>
+          <% services.forEach(service => { %>
+            <option value="<%= service._id %>" <%= query.service === service._id.toString() ? 'selected' : '' %>><%= service.title %></option>
+          <% }) %>
+        </select>
+      </div>
+      <!-- Submit Button -->
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-lg w-100">Filter</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Display the list of products -->
+  <div class="row g-3">
+    <% if (products.length === 0) { %>
+      <p>No products found.</p>
+    <% } else { %>
+      <% products.forEach(product => { %>
+        <% 
+          const productBrand = brands.find(b => b._id.toString() === product.brand.toString());
+          const productService = services.find(s => s._id.toString() === product.service.toString());
+        %>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="product-item bg-light border-bottom border-5 border-primary rounded h-100">
+            <div class="position-relative p-3">
+              <!-- Product Image -->
+              <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid mb-2" style="height: 150px; object-fit: contain;">
+              
+              <!-- Product Name -->
+              <h5 class="text-primary"><%= product.name %></h5>
+              
+              <!-- Truncated Product Description -->
+              <p class="small"><%= truncateText(product.description, 50) %></p>
+              
+              <!-- Edit and Delete Buttons -->
+              <a href="/editproduct/<%= product._id %>" class="btn btn-sm btn-secondary">Edit</a>
+              <form action="/deleteproduct/<%= product._id %>" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm mt-2">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- Include necessary scripts -->
+</body>
+</html>

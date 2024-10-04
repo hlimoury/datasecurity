@@ -27,6 +27,13 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+        <!-- Swiper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+
+    <!-- Swiper.js JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+
     
 </head>
 
@@ -59,8 +66,8 @@
                     <img class="w-100" src="img/carousel-2.png" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h5 class="text-white text-uppercase animated bounceInDown">Meilleurs Services De Sécurité</h5>
-                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Un Lieu Sûr Et Sécurisé Pour Vous</h1>
+                            <h5 class="text-white text-uppercase animated bounceInDown">Sécurité Fiable Et Innovante</h5>
+                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Nous Veillons Sur Votre Tranquillité</h1>
                             <a href="mailto:datasecurity@datasecurity.ma?subject=Demande%20de%20renseignements&body=Bonjour,%20j'aimerais%20en%20savoir%20plus%20sur%20vos%20services." class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Contactez-nous</a>
                         </div>
                     </div>
@@ -69,8 +76,8 @@
                     <img class="w-100" src="img/carousel-3.png" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h5 class="text-white text-uppercase animated bounceInDown">Meilleurs Services De Sécurité</h5>
-                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Un Lieu Sûr Et Sécurisé Pour Vous</h1>
+                            <h5 class="text-white text-uppercase animated bounceInDown">Protection Maximale 24h/24</h5>
+                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Votre Sécurité, Notre Priorité Absolue</h1>
                             <a href="mailto:datasecurity@datasecurity.ma?subject=Demande%20de%20renseignements&body=Bonjour,%20j'aimerais%20en%20savoir%20plus%20sur%20vos%20services."" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Contactez-nous</a>
                         </div>
                     </div>
@@ -157,7 +164,7 @@
                           <!-- Truncated Summary -->
                           <h5 class="mb-3"><%= truncateText(service.summary, 100) %></h5>
                           <!-- Link to Products for the Service -->
-                          <a href="/service/<%= service._id %>/products" class="btn btn-secondary">View Products <i class="bi bi-arrow-right ms-2"></i></a>
+                          <a href="/service/<%= service._id %>/products" class="btn btn-secondary">Voir Les Produits <i class="bi bi-arrow-right ms-2"></i></a>
                         </div>
                       </div>
                     </div>
@@ -168,6 +175,57 @@
     </div>
 </section>
     <!-- Services End -->
+
+
+
+
+    <!-- Nouveaux Produits Start -->
+<section id="nouveaux-produits">
+    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+      <div class="container">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+          <h5 class="text-primary text-uppercase" style="letter-spacing: 5px;">Nouveaux Produits</h5>
+          <h1 class="display-5 mb-0">Découvrez Nos Derniers Produits</h1>
+        </div>
+  
+        <!-- Swiper Container -->
+        <div class="swiper-container produits-slider">
+          <div class="swiper-wrapper">
+            <% newProducts.forEach(product => { %>
+              <div class="swiper-slide">
+                <div class="product-item">
+                  <!-- Image du produit -->
+                  <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid">
+                  <!-- Icône Nouveau -->
+                  <span class="new-icon">Nouveau</span>
+                  <!-- Informations du produit -->
+                  <div class="product-info mt-3">
+                    <h5 class="mb-1"><%= product.name %></h5>
+                    <!-- Lien vers les détails du produit -->
+                    <a href="/product/<%= product._id %>" class="btn btn-secondary mt-2">Voir Détails</a>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+  
+          <!-- Pagination -->
+          <div class="swiper-pagination"></div>
+  
+          <!-- Navigation -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Nouveaux Produits End -->
+  
+     
+
+
+
+
 
     
     <section class="client py-5">
@@ -180,55 +238,65 @@
                 </div>
             </div>
     
-            <div class="row justify-content-center">
-                <div class="col-md-2 col-6">
-                    <div class="client-logo">
-                        <a href="https://www.marjane.ma/" target="_blank">
-                            <img src="img/marjane.png" alt="Client 1">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="client-logo">
-                        <a href="https://www.marjane.ma/" target="_blank">
-                            <img src="img/marjanemarket.jpg" alt="Client 2">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="client-logo">
-                        <a href="https://www.electroplanet.ma/" target="_blank">
-                            <img src="img/electroplanet.png" alt="Client 3">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="client-logo">
-                        <a href="https://tachfinecenter.ma/" target="_blank">
-                            <img src="img/tachfinecenter.jpg" alt="Client 4">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="client-logo">
-                        <a href="https://www.marinashopping.ma/" target="_blank">
-                            <img src="img/marina.png" alt="Client 5">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-2 col-6">
-                    <div class="client-logo">
-                        <a href="https://www.cosmoselectro.ma/" target="_blank">
-                            <img src="img/cosmoselectro.jpg" alt="Client 6">
-                        </a>
-                    </div>
-                </div>
+            <!-- Swiper Container -->
+            <div class="swiper-container client-slider">
+                <div class="swiper-wrapper">
+                    <% clients.forEach(client => { %>
+                      <div class="swiper-slide">
+                        <div class="client-logo">
+                          <a href="<%= client.website %>" target="_blank">
+                            <img src="<%= client.logo %>" alt="<%= client.name %>">
+                          </a>
+                        </div>
+                      </div>
+                    <% }) %>
+                    
+                  </div>
+    
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+    
+                <!-- Add Navigation -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         </div>
     </section>
     
-   
-    
+    <!-- Projects Carousel Start -->
+<!-- Projects Carousel Start -->
+<!-- Projects Carousel Start -->
+<div class="container-fluid projects-section">
+    <div class="container">
+      <h2 class="mb-4 text-center">Nos Projets</h2>
+      <div class="swiper-container project-carousel">
+        <div class="swiper-wrapper">
+          <% projects.forEach(project => { %>
+            <div class="swiper-slide">
+              <div class="project-item">
+                <% if (project.image) { %>
+                  <img src="<%= project.image %>" alt="<%= project.title %>" class="img-fluid">
+                <% } %>
+                <h3><%= project.title %></h3>
+                <p><%= project.phrase %></p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <!-- Pagination et navigation -->
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Projects Carousel End -->
+  
+  <!-- Projects Carousel End -->
+  
+  <!-- Projects Carousel End -->
+  
+
 
 
 
