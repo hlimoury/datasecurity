@@ -179,6 +179,35 @@
 
 
 
+<!-- Brands Carousel Start -->
+<div class="container-fluid py-5">
+    <div class="container">
+      <h2 class="mb-4 text-center">Nos Marques</h2>
+      <div class="swiper-container brands-carousel">
+        <div class="swiper-wrapper">
+          <% brandImages.forEach(brandImage => { %>
+            <div class="swiper-slide">
+              <div class="brand-item">
+                <% if (brandImage.image) { %>
+                  <img src="<%= brandImage.image %>" alt="<%= brandImage.name %>" class="img-fluid">
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <div class="swiper-pagination"></div>
+        <!-- Optional navigation buttons -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Brands Carousel End -->
+  
+
+  
+
     <!-- Nouveaux Produits Start -->
 <section id="nouveaux-produits">
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
@@ -207,6 +236,7 @@
                 </div>
               </div>
             <% }) %>
+            
           </div>
   
           <!-- Pagination -->
@@ -233,7 +263,8 @@
             <div class="row justify-content-center">
                 <div class="col-12 text-center">
                     <div class="section-title mb-4">
-                        <h2>Nos références clients :</h2>
+                        <h5 class="text-primary text-uppercase" style="letter-spacing: 5px;">CLIENTS</h5>
+                        <h1>Nos références clients :</h1>
                     </div>
                 </div>
             </div>
@@ -250,7 +281,34 @@
                         </div>
                       </div>
                     <% }) %>
-                    
+                    <% clients.forEach(client => { %>
+                        <div class="swiper-slide">
+                          <div class="client-logo">
+                            <a href="<%= client.website %>" target="_blank">
+                              <img src="<%= client.logo %>" alt="<%= client.name %>">
+                            </a>
+                          </div>
+                        </div>
+                      <% }) %>
+                      <% clients.forEach(client => { %>
+                        <div class="swiper-slide">
+                          <div class="client-logo">
+                            <a href="<%= client.website %>" target="_blank">
+                              <img src="<%= client.logo %>" alt="<%= client.name %>">
+                            </a>
+                          </div>
+                        </div>
+                      <% }) %>
+                      <% clients.forEach(client => { %>
+                        <div class="swiper-slide">
+                          <div class="client-logo">
+                            <a href="<%= client.website %>" target="_blank">
+                              <img src="<%= client.logo %>" alt="<%= client.name %>">
+                            </a>
+                          </div>
+                        </div>
+                      <% }) %>
+                      
                   </div>
     
                 <!-- Add Pagination -->
@@ -262,34 +320,54 @@
             </div>
         </div>
     </section>
+
+
+
+
+    
     
     <!-- Projects Carousel Start -->
 <!-- Projects Carousel Start -->
 <!-- Projects Carousel Start -->
 <div class="container-fluid projects-section">
     <div class="container">
-      <h2 class="mb-4 text-center">Nos Projets</h2>
-      <div class="swiper-container project-carousel">
-        <div class="swiper-wrapper">
-          <% projects.forEach(project => { %>
-            <div class="swiper-slide">
-              <div class="project-item">
-                <% if (project.image) { %>
-                  <img src="<%= project.image %>" alt="<%= project.title %>" class="img-fluid">
-                <% } %>
-                <h3><%= project.title %></h3>
-                <p><%= project.phrase %></p>
-              </div>
+        <h5 class="text-primary text-uppercase text-center" style="letter-spacing: 5px;">PROJETS</h5>
+        <h2 class="mb-4 text-center">Nos Projets</h2>
+
+        <!-- Swiper Container -->
+        <div class="swiper-container project-carousel">
+            <div class="swiper-wrapper">
+                <% projects.forEach(project => { %>
+                    <div class="swiper-slide">
+                        <div class="project-item">
+                            <% if (project.image) { %>
+                                <img src="<%= project.image %>" alt="<%= project.title %>" class="img-fluid">
+                            <% } %>
+                            <h3><%= project.title %></h3>
+                            <p><%= project.phrase %></p>
+                        </div>
+                    </div>
+                <% }) %>
+                <% projects.forEach(project => { %>
+                    <div class="swiper-slide">
+                        <div class="project-item">
+                            <% if (project.image) { %>
+                                <img src="<%= project.image %>" alt="<%= project.title %>" class="img-fluid">
+                            <% } %>
+                            <h3><%= project.title %></h3>
+                            <p><%= project.phrase %></p>
+                        </div>
+                    </div>
+                <% }) %>
             </div>
-          <% }) %>
+            <!-- Pagination and Navigation -->
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
-        <!-- Pagination et navigation -->
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-      </div>
     </div>
-  </div>
+</div>
+
   <!-- Projects Carousel End -->
   
   <!-- Projects Carousel End -->
@@ -328,7 +406,7 @@
 
     <section id="location">
         <div class="container-fluid p-0">
-          <h2 class="text-center my-5">Localisation</h2>
+          <h1 class="text-center my-5">Localisation</h1>
           <div class="map-responsive">
             <!-- Embed Code from Google Maps -->
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.219610821501!2d-7.577017722299488!3d33.59960594149191!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd604be6826f%3A0xa04725e8911e520d!2sDATA%20SECURITY!5e0!3m2!1sen!2sma!4v1727680477137!5m2!1sen!2sma" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>

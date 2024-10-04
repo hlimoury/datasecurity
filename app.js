@@ -73,6 +73,22 @@ const projectStorage = multer.diskStorage({
 });
 const uploadProjectImage = multer({ storage: projectStorage });
 
+// Multer storage configuration for brand images
+const brandImageStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    if (file.mimetype.startsWith('image')) {
+      cb(null, 'public/uploads/images/brands/'); // Assurez-vous que ce répertoire existe
+    } else {
+      cb(new Error('Type de fichier invalide'), false);
+    }
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'brand-image-' + Date.now() + path.extname(file.originalname));
+  }
+});
+const uploadBrandImage = multer({ storage: brandImageStorage });
+
+
 // Routes
 
 app.get('/get-favicon', async (req, res) => {
@@ -99,13 +115,17 @@ app.get('/', async function(req, res) {
     const projects = await database.collection('projects')
       .find()
       .toArray(); // Récupérer tous les projets
+    const brandImages = await database.collection('brand_images')
+      .find()
+      .toArray(); // Récupérer toutes les images de marques
 
-    res.render('index', { services, clients, newProducts, projects });
+    res.render('index', { services, clients, newProducts, projects, brandImages });
   } catch (err) {
     console.error('Error fetching data:', err);
     res.status(500).send('Error fetching data');
   }
 });
+
 
 
 // Authentication routes
@@ -780,6 +800,90 @@ app.post('/editproject/:id', ensureAuthenticated, async (req, res) => {
     res.status(500).send('Error updating project');
   }
 });
+
+
+// Afficher le formulaire d'ajout et la liste des images de marques
+app.get('/adminbrandimage', ensureAuthenticated, async (req, res) => {
+  try {
+    const database = db.getDb();
+    const brandImages = await database.collection('brand_images').find().toArray();
+    res.render('admin-brand-images', { brandImages });
+  } catch (err) {
+    console.error('Erreur lors de la récupération des images de marques:', err);
+    res.status(500).send('Erreur lors de la récupération des images de marques');
+  }
+});
+
+// Ajouter une nouvelle image de marque
+app.post('/adminbrandimage', ensureAuthenticated, uploadBrandImage.single('image'), async (req, res) => {
+  const { name } = req.body;
+  const imagePath = req.file ? req.file.path.replace('public', '') : '';
+
+  try {
+    const database = db.getDb();
+    await database.collection('brand_images').insertOne({
+      name,
+      image: imagePath,
+      createdAt: new Date()
+    });
+    res.redirect('/adminbrandimage');
+  } catch (err) {
+    console.error('Erreur lors de l\'ajout de l\'image de marque:', err);
+    res.status(500).send('Erreur lors de l\'ajout de l\'image de marque');
+  }
+});
+
+// Supprimer une image de marque
+app.post('/deletebrandimage/:id', ensureAuthenticated, async (req, res) => {
+  const brandImageId = req.params.id;
+  try {
+    const database = db.getDb();
+    await database.collection('brand_images').deleteOne({ _id: new ObjectId(brandImageId) });
+    res.redirect('/adminbrandimage');
+  } catch (err) {
+    console.error('Erreur lors de la suppression de l\'image de marque:', err);
+    res.status(500).send('Erreur lors de la suppression de l\'image de marque');
+  }
+});
+
+
+app.get('/editbrandimage/:id', ensureAuthenticated, async (req, res) => {
+  const brandImageId = req.params.id;
+  try {
+    const database = db.getDb();
+    const brandImage = await database.collection('brand_images').findOne({ _id: new ObjectId(brandImageId) });
+    res.render('edit-brand-image', { brandImage });
+  } catch (err) {
+    console.error('Erreur lors de la récupération de l\'image de marque:', err);
+    res.status(500).send('Erreur lors de la récupération de l\'image de marque');
+  }
+});
+
+
+app.post('/editbrandimage/:id', ensureAuthenticated, uploadBrandImage.single('image'), async (req, res) => {
+  const brandImageId = req.params.id;
+  const { name } = req.body;
+  const updateData = { name };
+
+  // Gérer le téléchargement de l'image si une nouvelle image est fournie
+  if (req.file) {
+    const imagePath = req.file.path.replace('public', '');
+    updateData.image = imagePath;
+  }
+
+  try {
+    const database = db.getDb();
+    await database.collection('brand_images').updateOne(
+      { _id: new ObjectId(brandImageId) },
+      { $set: updateData }
+    );
+    res.redirect('/adminbrandimage');
+  } catch (err) {
+    console.error('Erreur lors de la mise à jour de l\'image de marque:', err);
+    res.status(500).send('Erreur lors de la mise à jour de l\'image de marque');
+  }
+});
+
 
 
 // Helper function to truncate text

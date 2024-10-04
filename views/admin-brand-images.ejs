@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include("partials/head") %>
+</head>
+<body>
+  <h1>Gérer les Images de Marques</h1>
+
+  <!-- Formulaire d'ajout d'image de marque -->
+  <form action="/adminbrandimage" method="POST" enctype="multipart/form-data">
+    <div>
+      <label for="name">Nom de la Marque :</label>
+      <input type="text" id="name" name="name">
+    </div>
+    <div>
+      <label for="image">Image :</label>
+      <input type="file" id="image" name="image" required>
+    </div>
+    <button type="submit">Ajouter l'Image de Marque</button>
+  </form>
+
+  <!-- Liste des images de marques existantes -->
+  <h2>Images de Marques Existantes</h2>
+  <ul>
+    <% brandImages.forEach(brandImage => { %>
+      <li>
+        <% if (brandImage.image) { %>
+          <img src="<%= brandImage.image %>" alt="<%= brandImage.name %>" width="100">
+        <% } %>
+        <strong><%= brandImage.name %></strong>
+        <!-- Boutons d'édition et de suppression -->
+        <a href="/editbrandimage/<%= brandImage._id %>">Modifier</a>
+        <form action="/deletebrandimage/<%= brandImage._id %>" method="POST" style="display:inline;">
+          <button type="submit">Supprimer</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>

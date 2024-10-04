@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link href="/css/admin.css" rel="stylesheet">
+</head>
+<body>
+  <h1>Modifier l'Image de Marque</h1>
+
+  <form action="/editbrandimage/<%= brandImage._id %>" method="POST" enctype="multipart/form-data">
+    <div>
+      <label for="name">Nom de la Marque :</label>
+      <input type="text" id="name" name="name" value="<%= brandImage.name %>">
+    </div>
+    <div>
+      <label for="image">Image :</label>
+      <input type="file" id="image" name="image">
+      <% if (brandImage.image) { %>
+        <img src="<%= brandImage.image %>" alt="<%= brandImage.name %>" width="100">
+      <% } %>
+    </div>
+    <button type="submit">Mettre à Jour l'Image de Marque</button>
+  </form>
+</body>
+</html>
