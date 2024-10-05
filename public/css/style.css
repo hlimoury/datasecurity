@@ -66,9 +66,15 @@ h6,
 }
 
 .btn-lg-square {
-    width: 46px;
-    height: 46px;
+    width: 30px;
+    height: 30px;
 }
+
+.btn-footer {
+    width: 30px;
+    height: 42px;
+}
+
 
 .btn-square,
 .btn-sm-square,
@@ -89,9 +95,9 @@ h6,
 .navbar-light .navbar-nav .nav-link {
     font-family: 'Jost', sans-serif;
     position: relative;
-    margin-left: 30px;
+    margin-left: 15px;
     padding: 50;
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--dark);
     outline: none;
@@ -108,10 +114,13 @@ h6,
 }
 
 .navbar-nav{
-    padding-right: 50px;
+    padding-right: 0px;
 }
 
-
+.instagram-logo{
+    position: relative;
+    bottom: 7px;
+}
     
 
 
@@ -189,6 +198,9 @@ h6,
 .carousel-indicators .active {
     height: 45px;
 }
+
+
+
 
 .hero-header {
     background: linear-gradient(rgba(18, 15, 45, .5), rgba(18, 15, 45, .5)), url(../img/carousel-1.jpg) top right no-repeat;
@@ -346,7 +358,7 @@ h6,
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
@@ -670,3 +682,41 @@ body, html {
     object-fit: cover;
     border-radius: 5px; /* Optionnel, pour arrondir les coins */
   }
+
+
+  /* Add this to your styles.css */
+
+/* Apply padding to the content-wrapper */
+.content-wrapper {
+    padding-left: 200px;
+    padding-right:200px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .content-wrapper {
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+}
+
+@media (max-width: 992px) {
+    .content-wrapper {
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .content-wrapper {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

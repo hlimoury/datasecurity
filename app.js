@@ -1,6 +1,5 @@
-// app.js
-
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const mongodb = require("mongodb");
 const db = require("./data/data-products");
@@ -24,16 +23,39 @@ app.use(session({
   cookie: { secure: false } // Set to true if using HTTPS
 }));
 
+// Define the base directory for uploaded files
+const UPLOAD_BASE_DIR = process.env.NODE_ENV === 'production' ? '/var/data/uploads' : path.join(__dirname, 'uploads');
+
+// Ensure the upload directories exist
+const uploadDirs = [
+  path.join(UPLOAD_BASE_DIR, 'images'),
+  path.join(UPLOAD_BASE_DIR, 'pdfs'),
+  path.join(UPLOAD_BASE_DIR, 'images/clients'),
+  path.join(UPLOAD_BASE_DIR, 'images/projects'),
+  path.join(UPLOAD_BASE_DIR, 'images/brands')
+];
+
+uploadDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
+// Serve uploaded files
+app.use('/uploads', express.static(UPLOAD_BASE_DIR));
+
 // Multer storage configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    let uploadPath;
     if (file.mimetype === 'application/pdf') {
-      cb(null, 'public/uploads/pdfs/'); // Ensure the 'public/uploads/pdfs/' directory exists
+      uploadPath = path.join(UPLOAD_BASE_DIR, 'pdfs');
     } else if (file.mimetype.startsWith('image')) {
-      cb(null, 'public/uploads/images/'); // Ensure the 'public/uploads/images/' directory exists
+      uploadPath = path.join(UPLOAD_BASE_DIR, 'images');
     } else {
-      cb(new Error('Invalid file type'), false);
+      return cb(new Error('Invalid file type'), false);
     }
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -41,11 +63,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// **New Multer configuration for client logos**
+// Multer storage configuration for client logos
 const clientStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.mimetype.startsWith('image')) {
-      cb(null, 'public/uploads/images/clients/'); // Ensure this directory exists
+      const uploadPath = path.join(UPLOAD_BASE_DIR, 'images/clients');
+      cb(null, uploadPath);
     } else {
       cb(new Error('Invalid file type'), false);
     }
@@ -56,13 +79,12 @@ const clientStorage = multer.diskStorage({
 });
 const uploadClientLogo = multer({ storage: clientStorage });
 
-
-// Multer storage configuration for project images
 // Multer storage configuration for project images
 const projectStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.mimetype.startsWith('image')) {
-      cb(null, 'public/uploads/images/projects/'); // Assurez-vous que ce répertoire existe
+      const uploadPath = path.join(UPLOAD_BASE_DIR, 'images/projects');
+      cb(null, uploadPath);
     } else {
       cb(new Error('Invalid file type'), false);
     }
@@ -77,9 +99,10 @@ const uploadProjectImage = multer({ storage: projectStorage });
 const brandImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.mimetype.startsWith('image')) {
-      cb(null, 'public/uploads/images/brands/'); // Assurez-vous que ce répertoire existe
+      const uploadPath = path.join(UPLOAD_BASE_DIR, 'images/brands');
+      cb(null, uploadPath);
     } else {
-      cb(new Error('Type de fichier invalide'), false);
+      cb(new Error('Invalid file type'), false);
     }
   },
   filename: function (req, file, cb) {
@@ -87,7 +110,6 @@ const brandImageStorage = multer.diskStorage({
   }
 });
 const uploadBrandImage = multer({ storage: brandImageStorage });
-
 
 // Routes
 
@@ -114,10 +136,10 @@ app.get('/', async function(req, res) {
       .toArray();
     const projects = await database.collection('projects')
       .find()
-      .toArray(); // Récupérer tous les projets
+      .toArray();
     const brandImages = await database.collection('brand_images')
       .find()
-      .toArray(); // Récupérer toutes les images de marques
+      .toArray();
 
     res.render('index', { services, clients, newProducts, projects, brandImages });
   } catch (err) {
@@ -125,8 +147,6 @@ app.get('/', async function(req, res) {
     res.status(500).send('Error fetching data');
   }
 });
-
-
 
 // Authentication routes
 
@@ -256,9 +276,9 @@ app.get('/adminservice', ensureAuthenticated, async (req, res) => {
 });
 
 // Add a new service
-app.post('/adminservice', upload.single('image'), async (req, res) => {
+app.post('/adminservice', ensureAuthenticated, upload.single('image'), async (req, res) => {
   const { title, summary, description } = req.body;
-  const imagePath = req.file ? req.file.path.replace('public', '') : '';  // Store relative image path
+  const imageUrl = req.file ? `/uploads/images/${req.file.filename}` : '';  // Store relative image URL
 
   try {
     const database = db.getDb();
@@ -266,7 +286,7 @@ app.post('/adminservice', upload.single('image'), async (req, res) => {
       title,
       summary,
       description,
-      image: imagePath
+      image: imageUrl
     });
     res.redirect('/adminservice');
   } catch (err) {
@@ -321,8 +341,8 @@ app.post('/editservice/:id', ensureAuthenticated, upload.single('image'), async 
 
   // Handle image upload if a new image is provided
   if (req.file) {
-    const imagePath = req.file.path.replace('public', '');
-    updateData.image = imagePath;
+    const imageUrl = `/uploads/images/${req.file.filename}`;
+    updateData.image = imageUrl;
   }
 
   try {
@@ -388,12 +408,11 @@ app.get('/adminproduct', ensureAuthenticated, async (req, res) => {
 });
 
 // Add a new product
-// Add a new product
 app.post('/adminproduct', ensureAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'pdf', maxCount: 1 }]), async (req, res) => {
   const { name, reference, description, brand, service } = req.body;
 
-  const imagePath = req.files['image'] ? req.files['image'][0].path.replace('public', '') : '';
-  const pdfPath = req.files['pdf'] ? req.files['pdf'][0].path.replace('public', '') : '';
+  const imageUrl = req.files['image'] ? `/uploads/images/${req.files['image'][0].filename}` : '';
+  const pdfUrl = req.files['pdf'] ? `/uploads/pdfs/${req.files['pdf'][0].filename}` : '';
 
   try {
     const database = db.getDb();
@@ -403,9 +422,9 @@ app.post('/adminproduct', ensureAuthenticated, upload.fields([{ name: 'image', m
       description,
       brand: new ObjectId(brand),
       service: new ObjectId(service),
-      image: imagePath,
-      pdf: pdfPath,
-      createdAt: new Date() // Ajoutez cette ligne pour enregistrer la date de création
+      image: imageUrl,
+      pdf: pdfUrl,
+      createdAt: new Date()
     });
     res.redirect('/adminproduct');
   } catch (err) {
@@ -413,7 +432,6 @@ app.post('/adminproduct', ensureAuthenticated, upload.fields([{ name: 'image', m
     res.status(500).send('Error adding product');
   }
 });
-
 
 // Delete a product
 app.post('/deleteproduct/:id', ensureAuthenticated, async (req, res) => {
@@ -507,14 +525,14 @@ app.post('/editproduct/:id', ensureAuthenticated, upload.fields([{ name: 'image'
 
   // Handle image upload if a new image is provided
   if (req.files['image']) {
-    const imagePath = req.files['image'][0].path.replace('public', '');
-    updateData.image = imagePath;
+    const imageUrl = `/uploads/images/${req.files['image'][0].filename}`;
+    updateData.image = imageUrl;
   }
 
   // Handle PDF upload if a new PDF is provided
   if (req.files['pdf']) {
-    const pdfPath = req.files['pdf'][0].path.replace('public', '');
-    updateData.pdf = pdfPath;
+    const pdfUrl = `/uploads/pdfs/${req.files['pdf'][0].filename}`;
+    updateData.pdf = pdfUrl;
   }
 
   try {
@@ -535,9 +553,9 @@ app.post('/editproduct/:id', ensureAuthenticated, upload.fields([{ name: 'image'
 app.get('/service/:id/products', async (req, res) => {
   try {
     const serviceId = req.params.id;
-    const page = parseInt(req.query.page) || 1; // Numéro de page, par défaut 1
-    const limit = 10; // Nombre de produits par page
-    const skip = (page - 1) * limit; // Calcul du nombre de documents à sauter
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
     const database = db.getDb();
 
@@ -600,7 +618,6 @@ app.get('/service/:id/products', async (req, res) => {
   }
 });
 
-
 // Product Details Route
 app.get('/product/:id', async (req, res) => {
   try {
@@ -626,7 +643,7 @@ app.get('/product/:id', async (req, res) => {
   }
 });
 
-// **Clients management routes**
+// Clients management routes
 
 // Display the admin clients page
 app.get('/adminclients', ensureAuthenticated, async (req, res) => {
@@ -643,14 +660,14 @@ app.get('/adminclients', ensureAuthenticated, async (req, res) => {
 // Add a new client
 app.post('/adminclients', ensureAuthenticated, uploadClientLogo.single('logo'), async (req, res) => {
   const { name, website } = req.body;
-  const logoPath = req.file ? req.file.path.replace('public', '') : '';
+  const logoUrl = req.file ? `/uploads/images/clients/${req.file.filename}` : '';
 
   try {
     const database = db.getDb();
     await database.collection('clients').insertOne({
       name,
       website,
-      logo: logoPath
+      logo: logoUrl
     });
     res.redirect('/adminclients');
   } catch (err) {
@@ -705,8 +722,8 @@ app.post('/editclient/:id', ensureAuthenticated, uploadClientLogo.single('logo')
 
   // Handle logo upload if a new logo is provided
   if (req.file) {
-    const logoPath = req.file.path.replace('public', '');
-    updateData.logo = logoPath;
+    const logoUrl = `/uploads/images/clients/${req.file.filename}`;
+    updateData.logo = logoUrl;
   }
 
   try {
@@ -722,8 +739,8 @@ app.post('/editclient/:id', ensureAuthenticated, uploadClientLogo.single('logo')
   }
 });
 
+// Projects management routes
 
-//adminprojects
 app.get('/adminprojects', ensureAuthenticated, async (req, res) => {
   try {
     const database = db.getDb();
@@ -737,13 +754,13 @@ app.get('/adminprojects', ensureAuthenticated, async (req, res) => {
 
 app.post('/adminprojects', ensureAuthenticated, uploadProjectImage.single('image'), async (req, res) => {
   const { title, phrase } = req.body;
-  const imagePath = req.file ? req.file.path.replace('public', '') : '';
+  const imageUrl = req.file ? `/uploads/images/projects/${req.file.filename}` : '';
   try {
     const database = db.getDb();
     await database.collection('projects').insertOne({
       title,
       phrase,
-      image: imagePath,
+      image: imageUrl,
       createdAt: new Date()
     });
     res.redirect('/adminprojects');
@@ -752,7 +769,6 @@ app.post('/adminprojects', ensureAuthenticated, uploadProjectImage.single('image
     res.status(500).send('Error adding project');
   }
 });
-
 
 app.post('/deleteproject/:id', ensureAuthenticated, async (req, res) => {
   const projectId = req.params.id;
@@ -778,16 +794,17 @@ app.get('/editproject/:id', ensureAuthenticated, async (req, res) => {
   }
 });
 
-app.post('/editproject/:id', ensureAuthenticated, async (req, res) => {
+app.post('/editproject/:id', ensureAuthenticated, uploadProjectImage.single('image'), async (req, res) => {
   const projectId = req.params.id;
   const { title, phrase } = req.body;
-  // Si vous avez une image, gérez-la ici
-  // const imagePath = req.file ? req.file.path.replace('public', '') : '';
-  const updateData = {
-    title,
-    phrase,
-    // image: imagePath
-  };
+  const updateData = { title, phrase };
+
+  // Handle image upload if a new image is provided
+  if (req.file) {
+    const imageUrl = `/uploads/images/projects/${req.file.filename}`;
+    updateData.image = imageUrl;
+  }
+
   try {
     const database = db.getDb();
     await database.collection('projects').updateOne(
@@ -801,39 +818,40 @@ app.post('/editproject/:id', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Brand Images management routes
 
-// Afficher le formulaire d'ajout et la liste des images de marques
+// Display the form and list of brand images
 app.get('/adminbrandimage', ensureAuthenticated, async (req, res) => {
   try {
     const database = db.getDb();
     const brandImages = await database.collection('brand_images').find().toArray();
     res.render('admin-brand-images', { brandImages });
   } catch (err) {
-    console.error('Erreur lors de la récupération des images de marques:', err);
-    res.status(500).send('Erreur lors de la récupération des images de marques');
+    console.error('Error fetching brand images:', err);
+    res.status(500).send('Error fetching brand images');
   }
 });
 
-// Ajouter une nouvelle image de marque
+// Add a new brand image
 app.post('/adminbrandimage', ensureAuthenticated, uploadBrandImage.single('image'), async (req, res) => {
   const { name } = req.body;
-  const imagePath = req.file ? req.file.path.replace('public', '') : '';
+  const imageUrl = req.file ? `/uploads/images/brands/${req.file.filename}` : '';
 
   try {
     const database = db.getDb();
     await database.collection('brand_images').insertOne({
       name,
-      image: imagePath,
+      image: imageUrl,
       createdAt: new Date()
     });
     res.redirect('/adminbrandimage');
   } catch (err) {
-    console.error('Erreur lors de l\'ajout de l\'image de marque:', err);
-    res.status(500).send('Erreur lors de l\'ajout de l\'image de marque');
+    console.error('Error adding brand image:', err);
+    res.status(500).send('Error adding brand image');
   }
 });
 
-// Supprimer une image de marque
+// Delete a brand image
 app.post('/deletebrandimage/:id', ensureAuthenticated, async (req, res) => {
   const brandImageId = req.params.id;
   try {
@@ -841,11 +859,10 @@ app.post('/deletebrandimage/:id', ensureAuthenticated, async (req, res) => {
     await database.collection('brand_images').deleteOne({ _id: new ObjectId(brandImageId) });
     res.redirect('/adminbrandimage');
   } catch (err) {
-    console.error('Erreur lors de la suppression de l\'image de marque:', err);
-    res.status(500).send('Erreur lors de la suppression de l\'image de marque');
+    console.error('Error deleting brand image:', err);
+    res.status(500).send('Error deleting brand image');
   }
 });
-
 
 app.get('/editbrandimage/:id', ensureAuthenticated, async (req, res) => {
   const brandImageId = req.params.id;
@@ -854,21 +871,20 @@ app.get('/editbrandimage/:id', ensureAuthenticated, async (req, res) => {
     const brandImage = await database.collection('brand_images').findOne({ _id: new ObjectId(brandImageId) });
     res.render('edit-brand-image', { brandImage });
   } catch (err) {
-    console.error('Erreur lors de la récupération de l\'image de marque:', err);
-    res.status(500).send('Erreur lors de la récupération de l\'image de marque');
+    console.error('Error fetching brand image:', err);
+    res.status(500).send('Error fetching brand image');
   }
 });
-
 
 app.post('/editbrandimage/:id', ensureAuthenticated, uploadBrandImage.single('image'), async (req, res) => {
   const brandImageId = req.params.id;
   const { name } = req.body;
   const updateData = { name };
 
-  // Gérer le téléchargement de l'image si une nouvelle image est fournie
+  // Handle image upload if a new image is provided
   if (req.file) {
-    const imagePath = req.file.path.replace('public', '');
-    updateData.image = imagePath;
+    const imageUrl = `/uploads/images/brands/${req.file.filename}`;
+    updateData.image = imageUrl;
   }
 
   try {
@@ -879,12 +895,10 @@ app.post('/editbrandimage/:id', ensureAuthenticated, uploadBrandImage.single('im
     );
     res.redirect('/adminbrandimage');
   } catch (err) {
-    console.error('Erreur lors de la mise à jour de l\'image de marque:', err);
-    res.status(500).send('Erreur lors de la mise à jour de l\'image de marque');
+    console.error('Error updating brand image:', err);
+    res.status(500).send('Error updating brand image');
   }
 });
-
-
 
 // Helper function to truncate text
 app.locals.truncateText = function (text, maxLength) {

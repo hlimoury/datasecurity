@@ -39,16 +39,17 @@
 
 <body>
     <!-- Navbar Start -->
+    <div class="">
     <header>
         <%- include('partials/header') %>
 
     </header>
     <!-- Navbar End -->
-
+  </div>
 
     <!-- Carousel Start -->
 <section id="caroussel-start">
-    <div class="container-fluid p-0 mb-5">
+    <div class="container-fluid p-0 mb-5 carousel-start">
         <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
           
             <div class="carousel-inner">
@@ -101,6 +102,7 @@
 
 
     <!-- About Start -->
+    <div >
 <section id="apropos">
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container">
@@ -175,7 +177,7 @@
     </div>
 </section>
     <!-- Services End -->
-
+  </div>
 
 
 
@@ -209,6 +211,7 @@
   
 
     <!-- Nouveaux Produits Start -->
+    
 <section id="nouveaux-produits">
     <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
       <div class="container">
@@ -236,54 +239,7 @@
                 </div>
               </div>
             <% }) %>
-            <% newProducts.forEach(product => { %>
-                <div class="swiper-slide">
-                  <div class="product-item">
-                    <!-- Image du produit -->
-                    <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid">
-                    <!-- Icône Nouveau -->
-                    <span class="new-icon">Nouveau</span>
-                    <!-- Informations du produit -->
-                    <div class="product-info mt-3">
-                      <h5 class="mb-1"><%= product.name %></h5>
-                      <!-- Lien vers les détails du produit -->
-                      <a href="/product/<%= product._id %>" class="btn btn-secondary mt-2">Voir Détails</a>
-                    </div>
-                  </div>
-                </div>
-              <% }) %>
-              <% newProducts.forEach(product => { %>
-                <div class="swiper-slide">
-                  <div class="product-item">
-                    <!-- Image du produit -->
-                    <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid">
-                    <!-- Icône Nouveau -->
-                    <span class="new-icon">Nouveau</span>
-                    <!-- Informations du produit -->
-                    <div class="product-info mt-3">
-                      <h5 class="mb-1"><%= product.name %></h5>
-                      <!-- Lien vers les détails du produit -->
-                      <a href="/product/<%= product._id %>" class="btn btn-secondary mt-2">Voir Détails</a>
-                    </div>
-                  </div>
-                </div>
-              <% }) %>
-              <% newProducts.forEach(product => { %>
-                <div class="swiper-slide">
-                  <div class="product-item">
-                    <!-- Image du produit -->
-                    <img src="<%= product.image %>" alt="<%= product.name %>" class="img-fluid">
-                    <!-- Icône Nouveau -->
-                    <span class="new-icon">Nouveau</span>
-                    <!-- Informations du produit -->
-                    <div class="product-info mt-3">
-                      <h5 class="mb-1"><%= product.name %></h5>
-                      <!-- Lien vers les détails du produit -->
-                      <a href="/product/<%= product._id %>" class="btn btn-secondary mt-2">Voir Détails</a>
-                    </div>
-                  </div>
-                </div>
-              <% }) %>
+           
             
           </div>
   
@@ -305,7 +261,7 @@
 
 
 
-    
+  
     <section class="client py-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -329,33 +285,7 @@
                         </div>
                       </div>
                     <% }) %>
-                    <% clients.forEach(client => { %>
-                        <div class="swiper-slide">
-                          <div class="client-logo">
-                            <a href="<%= client.website %>" target="_blank">
-                              <img src="<%= client.logo %>" alt="<%= client.name %>">
-                            </a>
-                          </div>
-                        </div>
-                      <% }) %>
-                      <% clients.forEach(client => { %>
-                        <div class="swiper-slide">
-                          <div class="client-logo">
-                            <a href="<%= client.website %>" target="_blank">
-                              <img src="<%= client.logo %>" alt="<%= client.name %>">
-                            </a>
-                          </div>
-                        </div>
-                      <% }) %>
-                      <% clients.forEach(client => { %>
-                        <div class="swiper-slide">
-                          <div class="client-logo">
-                            <a href="<%= client.website %>" target="_blank">
-                              <img src="<%= client.logo %>" alt="<%= client.name %>">
-                            </a>
-                          </div>
-                        </div>
-                      <% }) %>
+                    
                       
                   </div>
     
@@ -396,17 +326,7 @@
                         </div>
                     </div>
                 <% }) %>
-                <% projects.forEach(project => { %>
-                    <div class="swiper-slide">
-                        <div class="project-item">
-                            <% if (project.image) { %>
-                                <img src="<%= project.image %>" alt="<%= project.title %>" class="img-fluid">
-                            <% } %>
-                            <h3><%= project.title %></h3>
-                            <p><%= project.phrase %></p>
-                        </div>
-                    </div>
-                <% }) %>
+                
             </div>
             <!-- Pagination and Navigation -->
             <div class="swiper-pagination"></div>
@@ -451,7 +371,7 @@
 
     <!-- Add the Map Section -->
 
-
+    <div >
     <section id="location">
         <div class="container-fluid p-0">
           <h1 class="text-center my-5">Localisation</h1>
@@ -461,7 +381,7 @@
           </div>
         </div>
       </section>
-      
+    </div>
     
 
     <!-- Footer Start -->
@@ -501,8 +421,8 @@
                 <div class="col-lg-3 col-md-6">
                     <h3 class="text-white mb-4">Suivez-Nous</h3>
                     <div class="d-flex">
-                        <a class="btn btn-lg btn-primary btn-lg-square rounded me-2" href="https://www.instagram.com/data_security_maroc/"><i class="fab fa-instagram fw-normal"></i></a>
-                        <a class="btn btn-lg btn-primary btn-lg-square rounded me-2" href="https://www.linkedin.com/company/data-security-maroc/mycompany/"><i class="fab fa-linkedin fw-normal"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded me-2 btn-footer" href="https://www.instagram.com/data_security_maroc/" "><i class="fab fa-instagram fw-normal"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded me-2 btn-footer" href="https://www.linkedin.com/company/data-security-maroc/mycompany/"><i class="fab fa-linkedin fw-normal"></i></a>
                         <!-- Ajoutez d'autres icônes de réseaux sociaux si nécessaire -->
                     </div>
                 </div>
