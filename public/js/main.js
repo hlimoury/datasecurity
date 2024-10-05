@@ -1,6 +1,6 @@
 
   var swiper = new Swiper('.swiper-container', {
-    slidesPerView: 3,
+    slidesPerView: 2,
     spaceBetween: 20,
     loop: true,
     autoplay: {
@@ -22,7 +22,7 @@
       },
       480: {
         slidesPerView: 2,
-        spaceBetween: 10,
+        spaceBetween: 20,
       },
     }
   });
